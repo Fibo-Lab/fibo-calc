@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Calculadora científica</title>
+  <meta name="description" content="Calculadora científica amb fraccions exactes, historial i funcionament sense connexió.">
+  <meta name="theme-color" content="#F4F6FA" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#11161D" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Calculadora">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/app.css">
+  <script src="vendor/mathjs/math.js" defer></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <h1 class="app-title" data-i18n="app.title">Calculadora científica</h1>
+      <nav class="tabs" role="tablist" data-i18n-attr="aria-label:app.modules" hidden></nav>
+      <div class="topbar-actions">
+        <label class="lang">
+          <span class="sr-only" data-i18n="app.language">Idioma</span>
+          <select id="lang"></select>
+        </label>
+        <button type="button" class="icon-btn history-toggle" data-action="history-open"
+                aria-controls="history" aria-expanded="false" data-i18n-attr="aria-label:history.open;title:history.open">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 2"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="view" class="view"></main>
+
+    <aside id="history" class="history" aria-labelledby="history-title">
+      <div class="history-head">
+        <h2 id="history-title" data-i18n="history.title">Historial</h2>
+        <button type="button" class="text-btn" data-action="history-clear" data-i18n="history.clear">Buida</button>
+        <button type="button" class="icon-btn history-close" data-action="history-close" data-i18n-attr="aria-label:history.close">×</button>
+      </div>
+      <p class="history-empty" data-i18n="history.empty">Encara no hi ha cap operació.</p>
+      <ol class="history-list"></ol>
+    </aside>
+    <div class="backdrop" hidden></div>
+  </div>
+  <div class="toasts" aria-live="polite"></div>
+  <noscript>Cal activar JavaScript per fer servir la calculadora.</noscript>
+</body>
+</html>

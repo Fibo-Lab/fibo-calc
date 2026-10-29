@@ -1,0 +1,12 @@
+{
+  "name": "calculadora-cientifica",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calculadora científica PWA (català/castellà) amb math.js",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0B63B6"/>
+  <g transform="translate(76.8 76.8) scale(.7)">
+    <rect x="96" y="80" width="320" height="120" rx="28" fill="#E9EEF5"/>
+    <g fill="#17202B" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle">
+      <text x="330" y="132" font-size="52">3</text>
+      <rect x="300" y="142" width="60" height="8" rx="4"/>
+      <text x="330" y="190" font-size="44">4</text>
+    </g>
+    <g fill="#FFFFFF">
+      <rect x="96" y="240" width="88" height="72" rx="18"/>
+      <rect x="212" y="240" width="88" height="72" rx="18"/>
+      <rect x="96" y="336" width="88" height="72" rx="18"/>
+      <rect x="212" y="336" width="88" height="72" rx="18"/>
+    </g>
+    <rect x="328" y="240" width="88" height="168" rx="18" fill="#FFB061"/>
+    <g stroke="#0B63B6" stroke-width="12" stroke-linecap="round">
+      <path d="M122 276h36M140 258v36M238 276h36M122 372h36M238 360h36M238 384h36"/>
+    </g>
+    <path d="M352 312h40M352 336h40" stroke="#17202B" stroke-width="12" stroke-linecap="round"/>
+  </g>
+</svg>
