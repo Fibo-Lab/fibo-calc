@@ -1,11 +1,14 @@
 # Handoff — Fibo Calc (calculadora científica PWA)
 
-Estat a 2026-11-07. Document per continuar la feina en una conversa nova o en un altre equip.
+> Relleu entre equips. Llegeix-lo en començar; actualitza'l en dir «cierro» o «handoff».
+
+Última actualització: 07-11-2026 · Equip: gargamel
 
 ## Estat actual
 
 - **Fet i funcionant**: calculadora científica PWA completa (v1.0.0).
-- Repo propi: `Fibo-Lab/fibo-calc` (privat), branca `main`. En local: `~/Projects/docencia/fibo-calc`.
+- Repo propi: `Fibo-Lab/fibo-calc` (**públic**), branca `main`. En local: `~/Projects/docencia/fibo-calc` (a gargamel; a Azrael encara no està clonat).
+- **Publicada a GitHub Pages**: https://fibo-lab.github.io/fibo-calc/ (des de `main`, arrel). Comprovat el 07-11-2026: carrega math.js, el manifest i el service worker es registra (offline per HTTPS). Es pot instal·lar al mòbil amb «Afegeix a la pantalla d'inici».
 - Abans vivia a `calculadora/` del repo `Fibo-Lab/2ESO_fraccions` (PR #2, fusionada). S'ha extret amb `git subtree split` mantenint l'historial; a `2ESO_fraccions` ara només hi queda un enllaç.
 - Proves: `npm test` → 9/9 passen (Node 18.19.1 a gargamel, sense dependències).
 - Provada amb Chromium (Playwright): Pixel 7, iPhone 12, 320×568, mòbil apaïsat, escriptori fosc, mode offline. A gargamel, també oberta al navegador de l'app de Claude: calcula bé; allà el service worker no es registra (limitació d'aquell navegador, no de l'app).
@@ -13,7 +16,8 @@ Estat a 2026-11-07. Document per continuar la feina en una conversa nova o en un
 ## Últim treball fet
 
 - Clonat, proves passades i PR `Fibo-Lab/2ESO_fraccions#2` fusionada a `main`.
-- Calculadora separada al seu propi repo `fibo-calc` (nom triat per encaixar amb `fibo-press`). README actualitzat amb les rutes noves.
+- Calculadora separada al seu propi repo `fibo-calc` (nom triat per encaixar amb `fibo-press`). README actualitzat amb les rutes noves. PR `Fibo-Lab/2ESO_fraccions#3` (treu `calculadora/`) fusionada.
+- Repo fet públic i GitHub Pages activat.
 
 ## Requisits originals (tots complerts)
 
@@ -52,16 +56,15 @@ Contracte de mòdul (`js/core/registry.js`): `{ id, titleKey, icon?, i18n?, moun
 
 ## Pendent / següent pas
 
-1. **Publicar per HTTPS** (GitHub Pages) per instal·lar-la al mòbil. Pages en repos privats demana pla de pagament → caldria fer `fibo-calc` **públic** (és GPL, cap problema). Decisió de Luis.
+1. **Luis:** instal·lar-la al mòbil des de https://fibo-lab.github.io/fibo-calc/ i provar-la a classe.
 2. Mòdul **gràfiques**: `js/modules/graphs/`, usar `engine.compileFunction(expr)` (recompilar si canvia `store.get().angle`). Canvas sense dependències o una llibreria a `vendor/`.
 3. Mòdul **estadística**: `js/modules/stats/`, usar `ctx.math` (mean, median, std, mode, quantileSeq…).
-4. Per a cada mòdul nou: registrar-lo a `js/main.js` (línies comentades), afegir fitxers a `ASSETS` de `sw.js`, pujar `VERSION`. `npm test` avisa si falta algun fitxer.
+4. Per a cada mòdul nou: registrar-lo a `js/main.js` (línies comentades), afegir fitxers a `ASSETS` de `sw.js`, pujar `VERSION`. `npm test` avisa si falta algun fitxer. Cada push a `main` es publica sol a Pages.
+5. Opcional: posar l'enllaç de Pages al `README.md`.
 
-## Dudas obertes
+## Dubtes oberts
 
-- Públic o privat (lligat a GitHub Pages).
-- Reordenar `~/Projects` per àrees (docencia/, meng3r-studio/, casa/, sistema/) — proposat, encara no fet. Hi ha remots locals que apunten a `mengerspong3` però els repos ja són a `Fibo-Lab`.
-- `~/Projects/docencia/fraccions/` conté còpies antigues sense git (`2ESO_fraccions`, `Fraccions`, `fraccions_gemini`, `fraccions hermes`): revisar si es poden arxivar.
+- `~/Projects/docencia/fraccions/` (gargamel) conté còpies antigues sense git (`Fraccions`, `fraccions_gemini`, `fraccions hermes`) i un clon vell de `2ESO_fraccions`: revisar si es poden arxivar.
 
 ## Coses a vigilar
 
