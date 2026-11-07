@@ -1,4 +1,4 @@
-# Calculadora científica (PWA)
+# Fibo Calc — Calculadora científica (PWA)
 
 Calculadora científica web instal·lable, feta amb HTML, CSS i JavaScript sense frameworks, sobre [math.js](https://mathjs.org).
 Interfície en **català** i **castellà**. Llicència **GPL-3.0-or-later**.
@@ -32,12 +32,12 @@ Interfície en **català** i **castellà**. Llicència **GPL-3.0-or-later**.
 Els mòduls ES i el service worker necessiten un servidor (no funciona obrint el fitxer amb doble clic):
 
 ```sh
-cd calculadora
+cd fibo-calc
 python3 -m http.server 8080      # o: npm start
 # obre http://localhost:8080
 ```
 
-Per publicar-la n'hi ha prou amb servir la carpeta `calculadora/` per HTTPS (p. ex. GitHub Pages). Des del navegador del mòbil, «Afegeix a la pantalla d'inici» la instal·la com una app.
+Per publicar-la n'hi ha prou amb servir aquest repositori per HTTPS (p. ex. GitHub Pages). Des del navegador del mòbil, «Afegeix a la pantalla d'inici» la instal·la com una app.
 
 Proves (Node 18 o posterior, sense dependències):
 
@@ -48,7 +48,7 @@ npm test
 ## Estructura
 
 ```
-calculadora/
+fibo-calc/
 ├── index.html               Esquelet: barra superior, vista del mòdul, historial
 ├── manifest.webmanifest     Manifest de la PWA
 ├── sw.js                    Service worker (llista d'arxius + VERSION)
@@ -121,7 +121,7 @@ Calculadora científica web instalable (PWA) en HTML, CSS y JavaScript sin frame
 - Funciona **sin conexión** gracias al service worker; math.js va incluido en `vendor/`.
 - `log` es el logaritmo decimal y `ln` el neperiano. La coma `,` es decimal y `;` separa argumentos.
 
-Arranque: `cd calculadora && python3 -m http.server 8080` y abre `http://localhost:8080`. Pruebas: `npm test`.
+Arranque: `cd fibo-calc && python3 -m http.server 8080` y abre `http://localhost:8080`. Pruebas: `npm test`.
 
 El código está organizado en módulos (`js/core` sin interfaz, `js/modules/*` para cada pantalla). Para añadir los módulos de **gráficas** y **estadística**, sigue los pasos de la sección «Afegir un mòdul»: crear la carpeta, registrarlo en `js/main.js` y añadir sus archivos a `sw.js`.
 
