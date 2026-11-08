@@ -2,7 +2,7 @@
 
 > Relleu entre equips. Llegeix-lo en començar; actualitza'l en dir «cierro» o «handoff».
 
-Última actualització: 07-11-2026 · Equip: gargamel
+Última actualització: 08-11-2026 · Equip: gargamel
 
 ## Estat actual
 
@@ -18,6 +18,7 @@
 - Clonat, proves passades i PR `Fibo-Lab/2ESO_fraccions#2` fusionada a `main`.
 - Calculadora separada al seu propi repo `fibo-calc` (nom triat per encaixar amb `fibo-press`). README actualitzat amb les rutes noves. PR `Fibo-Lab/2ESO_fraccions#3` (treu `calculadora/`) fusionada.
 - Repo fet públic i GitHub Pages activat.
+- 08-11-2026: afegit l'enllaç a Pages al `README.md` (ca i es), amb nota que no hi ha APK (és una PWA; s'instal·la des del navegador).
 
 ## Requisits originals (tots complerts)
 
@@ -56,11 +57,10 @@ Contracte de mòdul (`js/core/registry.js`): `{ id, titleKey, icon?, i18n?, moun
 
 ## Pendent / següent pas
 
-1. **Luis:** instal·lar-la al mòbil des de https://fibo-lab.github.io/fibo-calc/ i provar-la a classe.
+1. **Luis:** instal·lar-la al mòbil (no hi ha APK, només PWA) des de https://fibo-lab.github.io/fibo-calc/ i provar-la a classe.
 2. Mòdul **gràfiques**: `js/modules/graphs/`, usar `engine.compileFunction(expr)` (recompilar si canvia `store.get().angle`). Canvas sense dependències o una llibreria a `vendor/`.
 3. Mòdul **estadística**: `js/modules/stats/`, usar `ctx.math` (mean, median, std, mode, quantileSeq…).
 4. Per a cada mòdul nou: registrar-lo a `js/main.js` (línies comentades), afegir fitxers a `ASSETS` de `sw.js`, pujar `VERSION`. `npm test` avisa si falta algun fitxer. Cada push a `main` es publica sol a Pages.
-5. Opcional: posar l'enllaç de Pages al `README.md`.
 
 ## Dubtes oberts
 
