@@ -9,7 +9,8 @@
 - **v2.0.0** publicada a GitHub Pages: https://fibo-lab.github.io/fibo-calc/ (repo públic `Fibo-Lab/fibo-calc`, branca `main`; cada push a `main` es publica sol).
 - Usuaris: alumnes i professors d'**ESO i Batxillerat**, sense distinció de rol.
 - `npm test` → 42/42 (motor, temes, notació natural, estadística, llista del SW). Node 18 a gargamel.
-- Provat a gargamel amb el navegador de l'app de Claude (Chromium), a 375×812, 320×568 i 812×375 apaïsat: calcula, notació natural, tocar la fórmula per moure el cursor, pulsació llarga (amb dit simulat i clic dret), canvi de pàgina amb pestanyes, 6 temes i diàleg d'ajustos, mòdul d'estadística en vertical i apaïsat. **No provat en un mòbil real** (el gest de lliscar i la pulsació llarga amb el dit de veritat).
+- Provat a gargamel amb el navegador de l'app de Claude (Chromium), a 375×812, 320×568 i 812×375 apaïsat: calcula, notació natural, tocar la fórmula per moure el cursor, pulsació llarga (amb dit simulat i clic dret), canvi de pàgina amb pestanyes, 6 temes i diàleg d'ajustos, mòdul d'estadística en vertical i apaïsat.
+- **Provat per Luis en un mòbil real (08-11-2026): tot el que ha provat funciona bé**, i també ho ha provat un amic. A Luis li agrada com queden les fraccions i els exponents. Falta provar-la amb el projector.
 - Per provar en local: `python3 -m http.server 8080` i obrir `http://localhost:8080/?nosw` (`?nosw` evita el service worker, que si no serveix fitxers vells de la memòria cau).
 
 ## Últim treball fet (08-11-2026)
@@ -23,13 +24,14 @@ Rediseny v2 a partir d'una proposta de disseny (feta amb Gemini) revisada:
 
 ## Pendent / següent pas
 
-1. **Luis:** provar-la al mòbil real i a classe amb el projector (tema Projector). Comprovar sobretot lliscar entre pàgines i la pulsació llarga.
-2. Estadística **bidimensional** per a Batxillerat: UI per a `computeBivariate()` (taula x/y, núvol de punts, recta de regressió, r).
-3. Opció a Ajustos per **tornar a la tecla SHIFT** (estil Casio) per a qui la prefereixi.
-4. Cursor arrossegable a la fórmula (ara: tocar + ◀ ▶).
-5. Temes d'usuari: editor acotat (color d'accent, arrodoniment, estil d'ombra) sobre `sanitizeTheme` + control de contrast.
-6. Pàgina «Avançades»: càlcul (derivada numèrica, integral definida) per a Batxillerat.
-7. Mòdul **gràfiques** (`engine.compileFunction`).
+1. **Revisar la selecció de funcions** de les pàgines (Luis no n'està convençut). Ara segueix el criteri «calculadora tipus Casio»; cal refer-la a partir del currículum (de 1r d'ESO a 2n de Batxillerat): a la vista, el que més es fa servir; a la pulsació llarga, el que es fa servir poc (sinh/cosh/tanh, per exemple); i deixar lloc a Avançades per a la derivada i la integral. Primer, una proposta en taula perquè Luis la validi; després, el codi.
+2. **Luis:** provar-la a classe amb el projector (tema Projector).
+3. Estadística **bidimensional** per a Batxillerat: UI per a `computeBivariate()` (taula x/y, núvol de punts, recta de regressió, r).
+4. Opció a Ajustos per **tornar a la tecla SHIFT** (estil Casio) per a qui la prefereixi.
+5. Cursor arrossegable a la fórmula (ara: tocar + ◀ ▶).
+6. Temes d'usuari: editor acotat (color d'accent, arrodoniment, estil d'ombra) sobre `sanitizeTheme` + control de contrast.
+7. Pàgina «Avançades»: càlcul (derivada numèrica, integral definida) per a Batxillerat. La integral s'ha de dibuixar en notació natural (∫ amb límits i dx), com les fraccions.
+8. Mòdul **gràfiques** (`engine.compileFunction`).
 
 ## Dubtes oberts
 
@@ -61,7 +63,6 @@ Contracte de mòdul (`js/core/registry.js`): `{ id, titleKey, icon?, i18n?, moun
 - Trigonometria via **scope**: graus/rad, soroll < 1e-14 → 0, `tan(90°)` → error. `log` = log10, `ln` = neperià.
 - Editor per **tokens**; la notació natural és només una capa de dibuix sobre els tokens.
 - Historial desa expressions autònomes (`Ans` substituït). Llicència GPL-3.0-or-later.
-
 ## Coses a vigilar
 
 - Canviar qualsevol fitxer → incrementar `VERSION` a `sw.js`; fitxer nou → afegir-lo a `ASSETS` (`npm test` avisa).
