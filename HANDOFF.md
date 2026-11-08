@@ -6,68 +6,65 @@
 
 ## Estat actual
 
-- **Fet i funcionant**: calculadora científica PWA completa (v1.0.0).
-- Repo propi: `Fibo-Lab/fibo-calc` (**públic**), branca `main`. En local: `~/Projects/docencia/fibo-calc` (a gargamel; a Azrael encara no està clonat).
-- **Publicada a GitHub Pages**: https://fibo-lab.github.io/fibo-calc/ (des de `main`, arrel). Comprovat el 07-11-2026: carrega math.js, el manifest i el service worker es registra (offline per HTTPS). Es pot instal·lar al mòbil amb «Afegeix a la pantalla d'inici».
-- Abans vivia a `calculadora/` del repo `Fibo-Lab/2ESO_fraccions` (PR #2, fusionada). S'ha extret amb `git subtree split` mantenint l'historial; a `2ESO_fraccions` ara només hi queda un enllaç.
-- Proves: `npm test` → 9/9 passen (Node 18.19.1 a gargamel, sense dependències).
-- Provada amb Chromium (Playwright): Pixel 7, iPhone 12, 320×568, mòbil apaïsat, escriptori fosc, mode offline. A gargamel, també oberta al navegador de l'app de Claude: calcula bé; allà el service worker no es registra (limitació d'aquell navegador, no de l'app).
+- **v2.0.0** publicada a GitHub Pages: https://fibo-lab.github.io/fibo-calc/ (repo públic `Fibo-Lab/fibo-calc`, branca `main`; cada push a `main` es publica sol).
+- Usuaris: alumnes i professors d'**ESO i Batxillerat**, sense distinció de rol.
+- `npm test` → 42/42 (motor, temes, notació natural, estadística, llista del SW). Node 18 a gargamel.
+- Provat a gargamel amb el navegador de l'app de Claude (Chromium), a 375×812, 320×568 i 812×375 apaïsat: calcula, notació natural, tocar la fórmula per moure el cursor, pulsació llarga (amb dit simulat i clic dret), canvi de pàgina amb pestanyes, 6 temes i diàleg d'ajustos, mòdul d'estadística en vertical i apaïsat. **No provat en un mòbil real** (el gest de lliscar i la pulsació llarga amb el dit de veritat).
+- Per provar en local: `python3 -m http.server 8080` i obrir `http://localhost:8080/?nosw` (`?nosw` evita el service worker, que si no serveix fitxers vells de la memòria cau).
 
-## Últim treball fet
+## Últim treball fet (08-11-2026)
 
-- Clonat, proves passades i PR `Fibo-Lab/2ESO_fraccions#2` fusionada a `main`.
-- Calculadora separada al seu propi repo `fibo-calc` (nom triat per encaixar amb `fibo-press`). README actualitzat amb les rutes noves. PR `Fibo-Lab/2ESO_fraccions#3` (treu `calculadora/`) fusionada.
-- Repo fet públic i GitHub Pages activat.
-- 08-11-2026: afegit l'enllaç a Pages al `README.md` (ca i es), amb nota que no hi ha APK (és una PWA; s'instal·la des del navegador).
+Rediseny v2 a partir d'una proposta de disseny (feta amb Gemini) revisada:
+- **Temes per tokens**: `js/themes/presets.js` (dades: base, light, dark, projector, cyberpunk, zen; `extends` per heretar), `js/themes/resolve.js` (pur: resolució, contrast WCAG, `sanitizeTheme` per a temes d'usuari futurs), `js/core/theme.js` (aplica variables CSS a `<html>`, mode `auto`, `data-fx`, emet `themechange`, desa còpia per a l'script anti-parpelleig de `index.html`). `css/app.css` ja només fa servir variables. Selector amb miniatures a `js/ui/settings.js` (`<dialog>` amb tema + idioma; el selector d'idioma ja no és a la barra).
+- **Teclat amb gestos** (`keypad.js`, `keys.js`): pàgines Bàsiques/Trigonometria/Avançades amb scroll-snap + pestanyes; bloc numèric fix; pulsació llarga amb variants (marca triangular), també clic dret i ↑. S'ha tret la tecla SHIFT/2a (les inverses són visibles a Trigonometria). Nova tecla **fracció** (`/` apila) i `÷` és divisió en línia (token `'÷'`, `Editor.text` el tradueix a `/` via `TOKEN_SRC`).
+- **Notació natural** (`natural.js` pur + `natural-render.js` DOM + `css/natural.css`): fraccions, arrels, exponents, |x|, sobre els mateixos tokens (motor i historial sense canvis). Tocar posa el cursor (`caretFromPoint`).
+- **Mòdul d'estadística** (`js/core/stats.js` pur, `js/modules/stats/`, `css/stats.css`): taula x/n editable, pegar d'un full de càlcul, targetes N, x̄, Me, Mo, σ, s, Q1, Q3…, barres i caixa en canvas. Quartils pel mètode de l'ESO (posició N·k/4). `computeBivariate()` (regressió, r) ja fet i provat, **sense interfície**.
+- `sw.js` → `v2.0.0` amb tots els fitxers nous; `?nosw` a `main.js`; `.claude/launch.json` per al servidor de previsualització.
 
-## Requisits originals (tots complerts)
+## Pendent / següent pas
 
-PWA HTML/CSS/JS sense frameworks, math.js · teclat en pantalla per a mòbil · historial · alternar exacte (fracció) / decimal · graus/radiants · offline amb service worker · interfície ca/es amb selector · llicència GPL-3.0 · README · codi en mòduls per afegir després **gràfiques** i **estadística**.
+1. **Luis:** provar-la al mòbil real i a classe amb el projector (tema Projector). Comprovar sobretot lliscar entre pàgines i la pulsació llarga.
+2. Estadística **bidimensional** per a Batxillerat: UI per a `computeBivariate()` (taula x/y, núvol de punts, recta de regressió, r).
+3. Opció a Ajustos per **tornar a la tecla SHIFT** (estil Casio) per a qui la prefereixi.
+4. Cursor arrossegable a la fórmula (ara: tocar + ◀ ▶).
+5. Temes d'usuari: editor acotat (color d'accent, arrodoniment, estil d'ombra) sobre `sanitizeTheme` + control de contrast.
+6. Pàgina «Avançades»: càlcul (derivada numèrica, integral definida) per a Batxillerat.
+7. Mòdul **gràfiques** (`engine.compileFunction`).
+
+## Dubtes oberts
+
+- Decidit sense confirmar: treure SHIFT (les inverses són a la pàgina Trig i amb pulsació llarga); `/` del teclat físic = fracció i `:` = divisió.
+- Decidit sense confirmar: si totes les freqüències són iguals no hi ha moda (excepte si només hi ha un valor).
+- `~/Projects/docencia/fraccions/` (gargamel) té còpies antigues sense git: revisar si es poden arxivar.
 
 ## Arquitectura (resum)
 
 ```
-fibo-calc/
-  index.html, manifest.webmanifest, sw.js (VERSION + llista ASSETS)
-  css/app.css                 mòbil primer, mode fosc, historial lateral ≥880px
-  vendor/mathjs/math.js       math.js 15.2.0 UMD (global window.math), Apache-2.0
-  js/main.js                  serveis + registre de mòduls + SW + pestanyes
-  js/core/engine.js           avaluació; exacte/decimal; graus/rad; compileFunction()
-  js/core/format.js           fraccions, π, arrels, format de nombres (pur)
-  js/core/{store,i18n,history,registry}.js
-  js/i18n/{ca,es}.js
-  js/ui/{history-panel,toast}.js
-  js/modules/calculator/      index, keys, keypad, editor (tokens), display
-  tests/                      engine.test.mjs, assets.test.mjs
+index.html (script anti-parpelleig del tema, <dialog id="settings">), sw.js (VERSION + ASSETS)
+css/app.css (només variables)  css/natural.css  css/stats.css
+js/main.js                      serveis, temes, ajustos, mòduls, SW
+js/core/  engine, format, store, i18n, history, registry, theme, stats
+js/themes/ presets.js (dades), resolve.js (pur)
+js/ui/    history-panel, toast, settings
+js/modules/calculator/  index, keys (PAGES, MAIN_KEYS, TOKEN_SRC), keypad (gestos), editor, natural, natural-render, display (resultat)
+js/modules/stats/       index, chart, format, texts
+tests/    engine, assets, theme, natural, stats
 ```
 
-Contracte de mòdul (`js/core/registry.js`): `{ id, titleKey, icon?, i18n?, mount(container, ctx), unmount(), onLanguageChange?(), onHistoryPick?(entry, what) }`, amb `ctx = { math, engine, store, i18n, history, toast }`. Amb ≥2 mòduls apareixen pestanyes.
+Contracte de mòdul (`js/core/registry.js`): `{ id, titleKey, icon?, i18n?, mount(container, ctx), unmount(), onLanguageChange?(), onHistoryPick?(entry, what) }`, amb `ctx = { math, engine, store, i18n, history, toast }`.
 
 ## Decisions preses (no re-discutir sense motiu)
 
-- Codi i comentaris en **català**; textos UI via `data-i18n` / `i18n.t()`.
-- Motor: avalua en `number`; en paral·lel prova `config({number:'Fraction'})` (es restaura sempre). Si falla, reconeix racional (den ≤ 10000), múltiple de π (den ≤ 100) o arrel (`k√r/d`). El bundle UMD **no** exporta `all`, per això no es fa `math.create(all, …)`.
-- Trigonometria via **scope** (no s'ha sobreescrit math.js): graus/rad, soroll < 1e-14 → 0, `tan(90°)` → error.
-- `log` = log10, `ln` = neperià, `log(x; b)` amb base. Coma `,` decimal, `;` separador d'arguments (internament `.` i `,`).
-- Editor per **tokens** (esborrar treu `sin(` sencer). Parèntesis que falten es tanquen sols (fantasma gris).
-- Historial desa expressions autònomes (`Ans` substituït pel valor) i parèntesis tancats.
-- Llicència GPL-3.0-or-later per a tot el repo.
-- Cal servidor HTTP (mòduls ES + SW): `python3 -m http.server 8080`.
-- No s'ha canviat el nom intern de la memòria cau (`calculadora-${VERSION}` a `sw.js`) ni el `name` de `package.json`: no cal i evita efectes secundaris.
-
-## Pendent / següent pas
-
-1. **Luis:** instal·lar-la al mòbil (no hi ha APK, només PWA) des de https://fibo-lab.github.io/fibo-calc/ i provar-la a classe.
-2. Mòdul **gràfiques**: `js/modules/graphs/`, usar `engine.compileFunction(expr)` (recompilar si canvia `store.get().angle`). Canvas sense dependències o una llibreria a `vendor/`.
-3. Mòdul **estadística**: `js/modules/stats/`, usar `ctx.math` (mean, median, std, mode, quantileSeq…).
-4. Per a cada mòdul nou: registrar-lo a `js/main.js` (línies comentades), afegir fitxers a `ASSETS` de `sw.js`, pujar `VERSION`. `npm test` avisa si falta algun fitxer. Cada push a `main` es publica sol a Pages.
-
-## Dubtes oberts
-
-- `~/Projects/docencia/fraccions/` (gargamel) conté còpies antigues sense git (`Fraccions`, `fraccions_gemini`, `fraccions hermes`) i un clon vell de `2ESO_fraccions`: revisar si es poden arxivar.
+- Sense frameworks ni build. Codi i comentaris en **català**; textos UI via `data-i18n` / `i18n.t()` (ca i es).
+- Temes = dades; el CSS no coneix cap tema concret (efectes via `[data-fx~="…"]`). Prohibit posar colors fixos al CSS. Tests de contrast obligatoris.
+- Motor: avalua en `number`; en paral·lel `config({number:'Fraction'})` (es restaura sempre). El bundle UMD **no** exporta `all`.
+- Trigonometria via **scope**: graus/rad, soroll < 1e-14 → 0, `tan(90°)` → error. `log` = log10, `ln` = neperià.
+- Editor per **tokens**; la notació natural és només una capa de dibuix sobre els tokens.
+- Historial desa expressions autònomes (`Ans` substituït). Llicència GPL-3.0-or-later.
 
 ## Coses a vigilar
 
-- Canviar qualsevol fitxer → incrementar `VERSION` a `sw.js` (si no, els usuaris no reben l'actualització).
-- `vendor/mathjs/package.json` (`type: commonjs`) existeix només perquè les proves de Node puguin carregar el UMD.
-- Mòbil apaïsat té un layout propi (pantalla i teclat costat a costat) a `@media (max-height: 520px) and (orientation: landscape)`.
+- Canviar qualsevol fitxer → incrementar `VERSION` a `sw.js`; fitxer nou → afegir-lo a `ASSETS` (`npm test` avisa).
+- Per provar en local, `?nosw`; si no, el SW serveix la versió anterior.
+- El navegador de l'app de Claude amb el panell **amagat** congela animacions, transicions i esdeveniments de scroll: les captures surten «a mig canvi». No és un error de l'app.
+- `vendor/mathjs/package.json` existeix només perquè les proves de Node carreguin el UMD.

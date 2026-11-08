@@ -1,8 +1,6 @@
-// Dibuix de l'expressió (amb cursor) i del resultat (fracció apilada o decimal).
+// Dibuix del resultat (fracció apilada o decimal). L'expressió la dibuixa natural-render.js.
 // Tot es construeix amb nodes DOM (mai innerHTML amb text de l'usuari).
 
-import { prettyToken } from './keys.js';
-import { missingParens } from '../../core/engine.js';
 import { exactParts, exactToText, decimalToText } from '../../core/format.js';
 
 function el(tag, cls, text) {
@@ -10,24 +8,6 @@ function el(tag, cls, text) {
   if (cls) node.className = cls;
   if (text !== undefined) node.textContent = text;
   return node;
-}
-
-export function renderExpression(container, editor, { showCaret = true } = {}) {
-  const caret = el('span', 'caret');
-  caret.setAttribute('aria-hidden', 'true');
-  const frag = document.createDocumentFragment();
-  editor.tokens.forEach((tok, i) => {
-    if (showCaret && i === editor.caret) frag.append(caret);
-    const s = el('span', 'tok', prettyToken(tok));
-    s.dataset.i = String(i);
-    frag.append(s);
-  });
-  if (showCaret && editor.caret === editor.tokens.length) frag.append(caret);
-  const ghost = missingParens(editor.text);
-  if (ghost) frag.append(el('span', 'ghost', ')'.repeat(ghost)));
-  container.replaceChildren(frag);
-  if (showCaret) caret.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  else container.scrollLeft = container.scrollWidth;
 }
 
 export function exactNode(ex) {

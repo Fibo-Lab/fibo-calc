@@ -1,0 +1,111 @@
+/* Notació natural de l'expressió (natural-render.js).
+   Només fa servir variables del tema: --ink --muted --accent --line --display-font --dur.
+   Les caixes que s'estiren (arrel, |x|, parèntesis grans) són inline-flex alineades per
+   la línia base; el contingut va dins de caixes inline-block perquè les fraccions
+   (vertical-align: middle) s'alineïn bé a qualsevol nivell. */
+
+.nat {
+  display: inline-block;
+  font-family: var(--display-font, var(--mono));
+  color: var(--ink);
+  line-height: 1.25;
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: .1em 0;
+}
+
+.nat-z { display: inline-block; width: 0; overflow: hidden; }
+.nat-k-op { margin: 0 .14em; }
+.nat-k-sep { margin-right: .12em; }
+.nat-ghost { color: var(--muted); opacity: .45; }
+
+/* Forat buit */
+.nat-ph {
+  display: inline-block;
+  width: .62em;
+  height: .82em;
+  margin: 0 .06em;
+  vertical-align: -.06em;
+  border: 1px dashed var(--muted);
+  border-radius: 3px;
+  transition: border-color var(--dur, .15s);
+}
+.nat-ph.is-active { border-color: var(--accent); border-style: solid; }
+
+/* Fracció apilada */
+.nat-frac {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  margin: 0 .1em;
+}
+.nat-num, .nat-den { display: block; padding: 0 .16em; }
+.nat-num { border-bottom: .07em solid currentColor; padding-bottom: .06em; }
+.nat-den { padding-top: .08em; }
+.nat-frac .nat-frac { font-size: .88em; }
+.nat-frac .nat-frac .nat-frac { font-size: 1em; }
+
+/* Exponents: la línia base de l'exponent s'aixeca (també si conté una fracció).
+   Si la base és alta (fracció), l'exponent s'arrenglera amb la part de dalt de la base. */
+.nat-base, .nat-exp { display: inline-block; }
+.nat-exp { font-size: .68em; vertical-align: .8em; padding-left: .04em; }
+.nat-exp.is-tall { vertical-align: 1.5em; }
+.nat-sup.is-tall { display: inline-flex; align-items: flex-start; }
+.nat-sup.is-tall > .nat-exp { margin-top: -.3em; }
+.nat-exp .nat-exp { font-size: .85em; }
+.nat-exp .nat-exp .nat-exp { font-size: 1em; }
+.nat-exp .nat-frac { margin: 0 .04em; }
+.nat-k-postfix { font-size: 1em; }
+
+/* Arrel: signe SVG que s'estira + barra superior sobre el radicand */
+.nat-root, .nat-abs, .nat-group.is-tall { display: inline-flex; align-items: baseline; }
+.nat-root { margin: 0 .04em; }
+.nat-root.has-index { margin-left: .26em; }
+.nat-root-sign {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  width: .58em;
+  min-height: 1.1em;
+}
+.nat-svg { display: block; width: 100%; height: auto; flex: 1; overflow: visible; }
+.nat-svg path { fill: none; stroke: currentColor; stroke-width: .075em; stroke-linejoin: round; stroke-linecap: round; }
+.nat-root-index {
+  position: absolute;
+  right: 55%;
+  top: 8%;
+  font-size: .5em;
+  line-height: 1;
+}
+.nat-rad {
+  display: inline-block;
+  border-top: .075em solid currentColor;
+  padding: .1em .1em 0 .06em;
+  margin-top: .02em;
+}
+
+/* Valor absolut */
+.nat-bar {
+  align-self: stretch;
+  width: .075em;
+  margin: .06em .14em;
+  background: currentColor;
+}
+.nat-bar.nat-ghost { background: var(--muted); }
+.nat-absbody { display: inline-block; }
+
+/* Funcions i parèntesis */
+.nat-fname { margin-right: .04em; }
+.nat-group, .nat-gbody { display: inline-block; }
+.nat-group.is-tall { display: inline-flex; }
+.nat-group.is-tall .nat-open, .nat-group.is-tall .nat-close {
+  align-self: stretch;
+  display: flex;
+  align-items: stretch;
+}
+.nat-group.is-tall .nat-fname { align-self: center; }
+.nat-group.is-tall .nat-svg.nat-paren { width: .34em; flex: none; margin: 0 .03em; }
+
+/* Cursor: més petit dins dels exponents; centrat dins dels forats */
+.nat .caret { vertical-align: -.2em; }
+.nat-exp .caret { height: 1.1em; }

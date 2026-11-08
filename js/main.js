@@ -7,22 +7,28 @@ import { createHistory } from './core/history.js';
 import { registerModule, getModules, getModule } from './core/registry.js';
 import { createHistoryPanel } from './ui/history-panel.js';
 import { createToast } from './ui/toast.js';
+import { createThemeManager } from './core/theme.js';
+import { createSettings } from './ui/settings.js';
 
 import calculator from './modules/calculator/index.js';
-// Mòduls futurs: crea la carpeta corresponent i descomenta'ls (vegeu README.md).
+import stats from './modules/stats/index.js';
+// Mòdul futur: crea la carpeta corresponent i descomenta'l (vegeu README.md).
 // import graphs from './modules/graphs/index.js';
-// import stats from './modules/stats/index.js';
 
 registerModule(calculator);
+registerModule(stats);
 // registerModule(graphs);
-// registerModule(stats);
 
 const store = createStore('calc.settings', {
   lang: detectLanguage(),
   angle: 'deg',
   resultMode: 'exact',
   module: 'calculator',
+  theme: 'auto',
+  keypadPage: 'basic',
 });
+const themes = createThemeManager(store);
+themes.apply();
 const i18n = createI18n(store);
 const engine = createEngine(window.math, store.get);
 const history = createHistory('calc.history', 100);
@@ -31,11 +37,9 @@ const ctx = { math: window.math, engine, store, i18n, history, toast };
 
 for (const mod of getModules()) if (mod.i18n) i18n.extend(mod.i18n);
 
-// --- Selector d'idioma ---
-const langSelect = document.querySelector('#lang');
-langSelect.replaceChildren(...LANGUAGES.map(({ code, name }) => new Option(name, code)));
-langSelect.value = store.get().lang;
-langSelect.addEventListener('change', () => store.set({ lang: langSelect.value }));
+// --- Ajustos: tema i idioma ---
+const settings = createSettings(document.querySelector('#settings'), { store, i18n, themes, languages: LANGUAGES });
+document.querySelector('[data-action="settings-open"]').addEventListener('click', () => settings.open());
 
 // --- Pestanyes de mòduls (només es mostren si n'hi ha més d'un) ---
 const tabs = document.querySelector('.tabs');
@@ -67,6 +71,9 @@ function showModule(id) {
   current?.unmount?.();
   view.replaceChildren();
   view.dataset.module = mod.id;
+  view.classList.remove('is-entering');
+  void view.offsetWidth; // reinicia l'animació d'entrada
+  view.classList.add('is-entering');
   current = mod;
   mod.mount(view, ctx);
   i18n.apply(view);
@@ -85,7 +92,7 @@ createHistoryPanel(document.querySelector('#history'), {
 store.subscribe((state, changed) => {
   if (changed.includes('module')) showModule(state.module);
   if (changed.includes('lang')) {
-    langSelect.value = state.lang;
+    settings.refresh();
     i18n.apply();
     document.title = i18n.t('app.title');
     for (const mod of getModules()) mod.onLanguageChange?.();
@@ -97,7 +104,8 @@ i18n.apply();
 document.title = i18n.t('app.title');
 
 // --- Service worker (funcionament sense connexió) ---
-if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+// Amb ?nosw a l'adreça no es registra (útil per provar canvis en local sense memòria cau).
+if ('serviceWorker' in navigator && location.protocol !== 'file:' && !new URLSearchParams(location.search).has('nosw')) {
   window.addEventListener('load', async () => {
     try {
       const reg = await navigator.serviceWorker.register('./sw.js');

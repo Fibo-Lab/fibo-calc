@@ -1,8 +1,9 @@
 // Mòdul principal: calculadora científica.
 
 import { Editor } from './editor.js';
-import { SCI_KEYS, MAIN_KEYS, continuesPrevious, prettyTokens, textToTokens } from './keys.js';
-import { renderExpression, renderResult } from './display.js';
+import { PAGES, MAIN_KEYS, continuesPrevious, prettyTokens, textToTokens } from './keys.js';
+import { renderResult } from './display.js';
+import { renderNatural, caretFromPoint } from './natural-render.js';
 import { createKeypad } from './keypad.js';
 import { exactToText, decimalToText } from '../../core/format.js';
 import { missingParens } from '../../core/engine.js';
@@ -12,12 +13,11 @@ const TEMPLATE = `
     <div class="status">
       <button type="button" class="chip" data-role="angle"></button>
       <button type="button" class="chip" data-role="format"></button>
-      <span class="chip chip-shift" data-role="shift-indicator" hidden data-i18n="mode.shift"></span>
     </div>
     <div class="expr-row">
       <button type="button" class="nav-btn" data-role="left" data-i18n-attr="aria-label:display.left">◀</button>
       <div class="expr" data-role="expr" role="textbox" aria-readonly="true" aria-multiline="false"
-           id="calc-expr-label" data-i18n-attr="aria-label:display.expression"></div>
+           id="calc-expr-label"></div>
       <button type="button" class="nav-btn" data-role="right" data-i18n-attr="aria-label:display.right">▶</button>
     </div>
     <output class="result" data-role="result" aria-live="polite" data-i18n-attr="title:display.copy"></output>
@@ -38,10 +38,8 @@ export default {
     const resultEl = $('result');
     const angleBtn = $('angle');
     const formatBtn = $('format');
-    const shiftInd = $('shift-indicator');
 
     const editor = new Editor();
-    let shift = false;
     let evaluated = false; // s'acaba de prémer "="
     let lastResult = null;
     let ansSrc = '0'; // valor d'Ans en forma de text, per desar expressions autònomes
@@ -53,10 +51,16 @@ export default {
       if (restored.ok) { engine.commit(restored); ansSrc = lastEntry.valueSrc; }
     }
 
-    const keypad = createKeypad($('keypad'), [
-      { keys: SCI_KEYS, cls: 'keys-sci' },
-      { keys: MAIN_KEYS, cls: 'keys-main' },
-    ], { onKey: handleKey, t });
+    const keypad = createKeypad($('keypad'), {
+      pages: PAGES,
+      main: MAIN_KEYS,
+      onKey: handleKey,
+      t,
+      // La tecla d'angle mostra el mode actual.
+      labelOf: (key) => (key.id === 'angle' ? t(store.get().angle === 'deg' ? 'mode.deg' : 'mode.rad') : null),
+      initialPage: Math.max(0, PAGES.findIndex((p) => p.id === store.get().keypadPage)),
+      onPageChange: (id) => store.set({ keypadPage: id }),
+    });
 
     function renderStatus() {
       const { angle, resultMode } = store.get();
@@ -64,12 +68,11 @@ export default {
       angleBtn.setAttribute('aria-label', t('mode.angleLabel', { mode: t(angle === 'deg' ? 'mode.degLong' : 'mode.radLong') }));
       formatBtn.textContent = t(resultMode === 'exact' ? 'mode.exact' : 'mode.decimal');
       formatBtn.setAttribute('aria-label', t('mode.resultLabel', { mode: t(resultMode === 'exact' ? 'mode.exactLong' : 'mode.decimalLong') }));
-      shiftInd.hidden = !shift;
-      keypad.setShift(shift);
+      keypad.relabel();
     }
 
     function render() {
-      renderExpression(exprEl, editor, { showCaret: !evaluated });
+      renderNatural(exprEl, editor.tokens, editor.caret, { showCaret: !evaluated });
       const mode = store.get().resultMode;
       if (evaluated) {
         renderResult(resultEl, lastResult, { mode, final: true, t });
@@ -118,11 +121,10 @@ export default {
     }
 
     function handleKey(key) {
-      const def = shift && key.shift ? key.shift : key;
-      if (key.action !== 'shift') shift = false;
+      const def = key;
       const action = def.action;
-      if (action === 'shift') shift = !shift;
-      else if (action === 'toggle') toggleFormat();
+      if (action === 'angle') { store.set({ angle: store.get().angle === 'deg' ? 'rad' : 'deg' }); return; }
+      if (action === 'toggle') toggleFormat();
       else if (action === 'clear') { editor.clear(); evaluated = false; lastResult = null; }
       else if (action === 'del') { evaluated = false; editor.backspace(); }
       else if (action === 'equals') { equals(); renderStatus(); return; }
@@ -148,9 +150,8 @@ export default {
 
     // Tocar dins l'expressió col·loca el cursor.
     exprEl.addEventListener('click', (e) => {
-      const tok = e.target.closest('.tok');
       evaluated = false;
-      editor.setCaret(tok ? Number(tok.dataset.i) + 1 : editor.tokens.length);
+      editor.setCaret(caretFromPoint(exprEl, e.clientX, e.clientY));
       render();
     });
 
@@ -222,6 +223,7 @@ export default {
       destroy() {
         document.removeEventListener('keydown', onKeydown);
         document.removeEventListener('paste', onPaste);
+        keypad.destroy();
         unsubscribe();
       },
     };

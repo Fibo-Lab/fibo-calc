@@ -1,14 +1,17 @@
 // Editor d'expressions basat en tokens: l'esborrat treu "sin(" sencer
 // i el cursor es mou per tokens, cosa que fa l'edició còmoda al mòbil.
 
+import { tokenSrc } from './keys.js';
+
 export class Editor {
   constructor() {
     this.tokens = [];
     this.caret = 0;
   }
 
+  // Text que s'avalua amb math.js (alguns tokens es tradueixen, p. ex. '÷' → '/').
   get text() {
-    return this.tokens.join('');
+    return this.tokens.map(tokenSrc).join('');
   }
 
   get isEmpty() {

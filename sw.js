@@ -1,7 +1,7 @@
 // Service worker: desa l'aplicació a la memòria cau perquè funcioni sense connexió.
 // Quan canviïs qualsevol fitxer, incrementa VERSION perquè els usuaris rebin l'actualització.
 
-const VERSION = 'v1.0.0';
+const VERSION = 'v2.0.0';
 const CACHE = `calculadora-${VERSION}`;
 
 const ASSETS = [
@@ -9,6 +9,8 @@ const ASSETS = [
   './index.html',
   './manifest.webmanifest',
   './css/app.css',
+  './css/natural.css',
+  './css/stats.css',
   './vendor/mathjs/math.js',
   './js/main.js',
   './js/core/engine.js',
@@ -17,15 +19,26 @@ const ASSETS = [
   './js/core/i18n.js',
   './js/core/registry.js',
   './js/core/store.js',
+  './js/core/stats.js',
+  './js/core/theme.js',
+  './js/themes/presets.js',
+  './js/themes/resolve.js',
   './js/i18n/ca.js',
   './js/i18n/es.js',
   './js/ui/history-panel.js',
+  './js/ui/settings.js',
   './js/ui/toast.js',
   './js/modules/calculator/index.js',
   './js/modules/calculator/display.js',
   './js/modules/calculator/editor.js',
   './js/modules/calculator/keypad.js',
   './js/modules/calculator/keys.js',
+  './js/modules/calculator/natural.js',
+  './js/modules/calculator/natural-render.js',
+  './js/modules/stats/index.js',
+  './js/modules/stats/chart.js',
+  './js/modules/stats/format.js',
+  './js/modules/stats/texts.js',
   './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -33,7 +46,8 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)));
+  // cache: 'reload' evita agafar còpies velles de la memòria cau HTTP (no barrejar versions).
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS.map((u) => new Request(u, { cache: 'reload' })))));
 });
 
 self.addEventListener('activate', (event) => {

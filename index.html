@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Calculadora científica</title>
   <meta name="description" content="Calculadora científica amb fraccions exactes, historial i funcionament sense connexió.">
-  <meta name="theme-color" content="#F4F6FA" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#11161D" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F4F6FA">
+  <script>
+    // Pinta el darrer tema abans del primer fotograma (evita el parpelleig). El tema real l'aplica js/core/theme.js.
+    try {
+      var c = JSON.parse(localStorage.getItem('calc.themeCache'));
+      if (c && c.vars) {
+        var r = document.documentElement;
+        for (var k in c.vars) if (/^--[\w-]+$/.test(k)) r.style.setProperty(k, c.vars[k]);
+        r.dataset.theme = c.id; r.dataset.fx = (c.fx || []).join(' '); r.style.colorScheme = c.scheme;
+      }
+    } catch (e) {}
+  </script>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Calculadora">
@@ -14,19 +24,20 @@
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/natural.css">
+  <link rel="stylesheet" href="css/stats.css">
   <script src="vendor/mathjs/math.js" defer></script>
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
   <div class="app">
     <header class="topbar">
-      <h1 class="app-title" data-i18n="app.title">Calculadora científica</h1>
+      <h1 class="app-title"><img class="logo" src="icons/icon.svg" alt=""><span class="title-text" data-i18n="app.title">Calculadora científica</span></h1>
       <nav class="tabs" role="tablist" data-i18n-attr="aria-label:app.modules" hidden></nav>
       <div class="topbar-actions">
-        <label class="lang">
-          <span class="sr-only" data-i18n="app.language">Idioma</span>
-          <select id="lang"></select>
-        </label>
+        <button type="button" class="icon-btn" data-action="settings-open" data-i18n-attr="aria-label:settings.open;title:settings.open">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.6 17 3 12 3Z"/><circle cx="7.5" cy="11" r="1.3" fill="currentColor"/><circle cx="10" cy="7" r="1.3" fill="currentColor"/><circle cx="14.5" cy="7" r="1.3" fill="currentColor"/></svg>
+        </button>
         <button type="button" class="icon-btn history-toggle" data-action="history-open"
                 aria-controls="history" aria-expanded="false" data-i18n-attr="aria-label:history.open;title:history.open">
           <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 2"/></svg>
@@ -47,6 +58,18 @@
     </aside>
     <div class="backdrop" hidden></div>
   </div>
+  <dialog id="settings" class="settings" aria-labelledby="settings-title">
+    <div class="settings-head">
+      <h2 id="settings-title" data-i18n="settings.title">Ajustos</h2>
+      <button type="button" class="icon-btn" data-action="settings-close" data-i18n-attr="aria-label:settings.close">×</button>
+    </div>
+    <div class="settings-body">
+      <h3 id="theme-label" data-i18n="settings.theme">Tema</h3>
+      <div class="theme-grid" role="radiogroup" aria-labelledby="theme-label"></div>
+      <h3><label for="lang" data-i18n="app.language">Idioma</label></h3>
+      <select id="lang"></select>
+    </div>
+  </dialog>
   <div class="toasts" aria-live="polite"></div>
   <noscript>Cal activar JavaScript per fer servir la calculadora.</noscript>
 </body>
