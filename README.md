@@ -3,6 +3,8 @@
 Calculadora científica web instal·lable, feta amb HTML, CSS i JavaScript sense frameworks, sobre [math.js](https://mathjs.org).
 Interfície en **català** i **castellà**. Llicència **GPL-3.0-or-later**.
 
+**Prova-la i instal·la-la: https://fibo-lab.github.io/fibo-calc/** (no cal APK: al mòbil, obre l'enllaç i tria «Afegeix a la pantalla d'inici» / «Instal·la l'app»).
+
 *[Resumen en castellano más abajo.](#castellano)*
 
 ## Funcionalitats
@@ -111,6 +113,8 @@ math.js © Jos de Jong i col·laboradors, sota llicència Apache 2.0 (compatible
 
 <a id="castellano"></a>
 ## Castellano
+
+**Pruébala e instálala: https://fibo-lab.github.io/fibo-calc/** (sin APK: desde el móvil, abre el enlace y elige «Añadir a la pantalla de inicio» / «Instalar app»).
 
 Calculadora científica web instalable (PWA) en HTML, CSS y JavaScript sin frameworks, con math.js. Interfaz en catalán y castellano (selector arriba a la derecha).
 
